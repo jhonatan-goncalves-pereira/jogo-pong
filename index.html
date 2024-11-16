@@ -5,46 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo Pong</title>
     <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: black;
-        }
-        canvas {
-            border-top: 2px solid white;
-            border-bottom: 2px solid white;
-            display: block;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            font-size: 20px;
-            cursor: pointer;
-            background-color: white;
-            border: none;
-            border-radius: 5px;
-            color: black;
-            transition: 0.3s;
-        }
+       /* Estilos gerais */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(120deg, #1e3c72, #2a5298); /* Gradiente bonito */
+    font-family: 'Arial', sans-serif;
+    color: white;
+    text-align: center;
+}
 
-        button:hover {
-            background-color: gray;
-            color: white;
-        }
+/* Título */
+.title {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Container das opções */
+.difficulty-options {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Estilos dos splits de dificuldade */
+.difficulty {
+    width: 150px;
+    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    position: relative;
+}
+
+.difficulty:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+}
+
+/* Diferenciação por dificuldade */
+.easy {
+    background: linear-gradient(120deg, #a8e063, #56ab2f); /* Verde claro */
+}
+
+.medium {
+    background: linear-gradient(120deg, #fbd72b, #f9484a); /* Laranja */
+}
+
+.hard {
+    background: linear-gradient(120deg, #e52d27, #b31217); /* Vermelho */
+}
+
+/* Texto dentro dos círculos */
+.label {
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
 
     </style>
 </head>
 <body><div id="menu">
-    <h1 style="color: white; text-align: center;">Escolha a Dificuldade</h1>
-    <div style="text-align: center;">
-        <button onclick="startGame('easy')">Fácil</button>
-        <button onclick="startGame('medium')">Médio</button>
-        <button onclick="startGame('hard')">Difícil</button>
+    <h1 class="title">Pong - Escolha a Dificuldade</h1>
+    <div class="difficulty-options">
+        <div class="difficulty easy" onclick="startGame('easy')">
+            <span class="label">Fácil</span>
+        </div>
+        <div class="difficulty medium" onclick="startGame('medium')">
+            <span class="label">Médio</span>
+        </div>
+        <div class="difficulty hard" onclick="startGame('hard')">
+            <span class="label">Difícil</span>
+        </div>
     </div>
 </div>
+
 <canvas id="pong" width="800" height="400" style="display: none;"></canvas>
 <script>
     // Variáveis de configuração
@@ -79,6 +126,7 @@
         gameInit();
     }
     function gameInit() {
+        resetBall();
         ball.speed = ballSpeed; // Configura a velocidade inicial
         setInterval(game, 1000 / 60); // Inicia o loop do jogo
     }
@@ -221,6 +269,9 @@
             drawCircle(ball.x, ball.y, ball.radius, ball.color);
         }
 
+
+        
+
         // Movimento do jogador
         canvas.addEventListener("mousemove", (event) => {
             let rect = canvas.getBoundingClientRect();
@@ -232,8 +283,6 @@
             update();
             render();
         }
-
-        setInterval(game, 1000 / 60);
     </script>
 </body>
 </html>
