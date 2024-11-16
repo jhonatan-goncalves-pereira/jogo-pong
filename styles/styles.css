@@ -1,0 +1,71 @@
+
+       /* Estilos gerais */
+       body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: linear-gradient(120deg, #1e3c72, #2a5298); /* Gradiente bonito */
+        font-family: 'Arial', sans-serif;
+        color: white;
+        text-align: center;
+    }
+    
+    /* Título */
+    .title {
+        font-size: 3rem;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Container das opções */
+    .difficulty-options {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        max-width: 600px;
+    }
+    
+    /* Estilos dos splits de dificuldade */
+    .difficulty {
+        width: 150px;
+        height: 150px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        background: white;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+        position: relative;
+    }
+    
+    .difficulty:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Diferenciação por dificuldade */
+    .easy {
+        background: linear-gradient(120deg, #a8e063, #56ab2f); /* Verde claro */
+    }
+    
+    .medium {
+        background: linear-gradient(120deg, #fbd72b, #f9484a); /* Laranja */
+    }
+    
+    .hard {
+        background: linear-gradient(120deg, #e52d27, #b31217); /* Vermelho */
+    }
+    
+    /* Texto dentro dos círculos */
+    .label {
+        font-size: 1.5rem;
+        color: white;
+        font-weight: bold;
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    }
+    
