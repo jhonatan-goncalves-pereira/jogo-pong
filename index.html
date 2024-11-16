@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo Pong</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+        }
+        canvas {
+            border-top: 2px solid white;
+            border-bottom: 2px solid white;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="pong" width="800" height="400"></canvas>
+    <script>
+        const canvas = document.getElementById("pong");
+        const context = canvas.getContext("2d");
+
+        // Função para desenhar retângulos
+        function drawRect(x, y, w, h, color) {
+            context.fillStyle = color;
+            context.fillRect(x, y, w, h);
+        }
+
+        // Função para desenhar uma bola
+        function drawCircle(x, y, r, color) {
+            context.fillStyle = color;
+            context.beginPath();
+            context.arc(x, y, r, 0, Math.PI * 2, false);
+            context.closePath();
+            context.fill();
+        }
+
+        // Função para desenhar o texto
+        function drawText(text, x, y, color) {
+            context.fillStyle = color;
+            context.font = "45px Arial";
+            context.fillText(text, x, y);
+        }
+
+        // Objetos do jogo
+        const user = {
+            x: 0,
+            y: canvas.height / 2 - 50,
+            width: 10,
+            height: 100,
+            color: "white",
+            score: 0,
+        };
+
+        const ai = {
+            x: canvas.width - 10,
+            y: canvas.height / 2 - 50,
+            width: 10,
+            height: 100,
+            color: "white",
+            score: 0,
+        };
+
+        const ball = {
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            radius: 10,
+            speed: 5,
+            velocityX: 5,
+            velocityY: 5,
+            color: "white",
+        };
+
+        // Controle da IA
+        // Controle da IA com redução na precisão
+        function moveAI() {
+            const aiMiddle = ai.y + ai.height / 2;
+            const ballMiddle = ball.y;
+            const difficulty = 0.2; // Ajuste entre 0 (difícil) e 1 (muito fácil)
+
+            if (Math.random() < difficulty) {
+                if (ballMiddle < aiMiddle) ai.y -= 3; // Movimentos mais lentos
+                else if (ballMiddle > aiMiddle) ai.y += 3;
+            }
+        }
+
+
+        // Colisão com o paddle
+        function collision(ball, paddle) {
+            return (
+                ball.x < paddle.x + paddle.width &&
+                ball.x + ball.radius > paddle.x &&
+                ball.y < paddle.y + paddle.height &&
+                ball.y + ball.radius > paddle.y
+            );
+        }
+
+        // Resetar bola
+        function resetBall() {
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height / 2;
+            ball.speed = 5;
+            ball.velocityX = -ball.velocityX;
+        }
+
+        // Atualizar posição da bola
+        function update() {
+            ball.x += ball.velocityX;
+            ball.y += ball.velocityY;
+
+            if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
+                ball.velocityY = -ball.velocityY;
+            }
+
+            const player = ball.x < canvas.width / 2 ? user : ai;
+
+            if (collision(ball, player)) {
+                // Calcula o ponto de colisão relativo ao paddle
+                let collidePoint = ball.y - (player.y + player.height / 2);
+
+                // Normaliza o valor entre -1 e 1
+                collidePoint = collidePoint / (player.height / 2);
+
+                // Define o ângulo de reflexão em radianos (45 graus máximo)
+                let angleRad = (Math.PI / 4) * collidePoint;
+
+                // Direção da bola: para a direita ou esquerda
+                let direction = ball.x < canvas.width / 2 ? 1 : -1;
+
+                // Aumenta a velocidade e ajusta os vetores X e Y
+                ball.velocityX = direction * ball.speed * Math.cos(angleRad);
+                ball.velocityY = ball.speed * Math.sin(angleRad);
+
+                // Incrementa a velocidade da bola após o contato
+                ball.speed += 0.5;
+            }
+
+            if (ball.x + ball.radius < 0) {
+                ai.score++;
+                resetBall();
+            } else if (ball.x - ball.radius > canvas.width) {
+                user.score++;
+                resetBall();
+            }
+
+            moveAI();
+        }
+
+        // Desenhar na tela
+        function render() {
+            drawRect(0, 0, canvas.width, canvas.height, "black");
+            drawText(user.score, canvas.width / 4, canvas.height / 5, "white");
+            drawText(ai.score, (3 * canvas.width) / 4, canvas.height / 5, "white");
+            drawRect(user.x, user.y, user.width, user.height, user.color);
+            drawRect(ai.x, ai.y, ai.width, ai.height, ai.color);
+            drawCircle(ball.x, ball.y, ball.radius, ball.color);
+        }
+
+        // Movimento do jogador
+        canvas.addEventListener("mousemove", (event) => {
+            let rect = canvas.getBoundingClientRect();
+            user.y = event.clientY - rect.top - user.height / 2;
+        });
+
+        // Loop do jogo
+        function game() {
+            update();
+            render();
+        }
+
+        setInterval(game, 1000 / 60);
+    </script>
+</body>
+</html>
